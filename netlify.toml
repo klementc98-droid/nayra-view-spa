@@ -1,0 +1,47 @@
+# Netlify config.
+#   build   — python3 build.py regenerates the three language pages
+#   function — availability.mjs fetches the Booking.com iCal feed
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  # Regenerates index.html, el/ and bg/ from templates/ + locale/.
+  command = "python3 build.py"
+
+# Friendlier URL for the availability endpoint.
+[[redirects]]
+  from = "/api/availability"
+  to = "/.netlify/functions/availability"
+  status = 200
+
+# Send visitors to their own language on first arrival; the switcher still wins
+# afterwards because these only fire on the bare root path.
+[[redirects]]
+  from = "/"
+  to = "/el/"
+  status = 302
+  force = false
+  conditions = {Language = ["el"]}
+
+[[redirects]]
+  from = "/"
+  to = "/bg/"
+  status = 302
+  force = false
+  conditions = {Language = ["bg"]}
+
+[[headers]]
+  for = "/media/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

@@ -1,0 +1,19 @@
+# Generated preview bundles — ~7 MB each, rebuild with `python pack_preview.py`
+preview/
+
+# Source photos before optimisation. The web-ready versions in media/ ARE
+# committed, because the site needs them at runtime.
+photos-inbox/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local Netlify state
+.netlify/
