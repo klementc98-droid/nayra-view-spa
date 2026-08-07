@@ -42,10 +42,20 @@ def alternates(code):
     return "\n".join(lines)
 
 
+def prefix(code):
+    """Relative path from this language's folder back to the site root.
+
+    Root-absolute paths (/media/...) only resolve when the site is served
+    from a domain root. A GitHub Pages project site lives under /<repo>/,
+    so every one of them 404s. Relative paths work at any mount point —
+    domain root, subfolder, or a local file."""
+    return "../" if LANGS[code]["dir"] else ""
+
+
 def langswitch(code):
     out = ['    <div class="langs" role="group" aria-label="Language">']
     for c, meta in LANGS.items():
-        href = "/" + (f'{meta["dir"]}/' if meta["dir"] else "")
+        href = prefix(code) + (f'{meta["dir"]}/' if meta["dir"] else "") or "./"
         cur = ' aria-current="true"' if c == code else ""
         out.append(
             f'      <a href="{href}" hreflang="{c}" lang="{c}" '
@@ -82,6 +92,12 @@ def main():
         page = page.replace("{{langswitch}}", langswitch(code))
         for k, v in s.items():
             page = page.replace("{{%s}}" % k, v)
+
+        # Root-absolute -> relative, so one build serves any mount point.
+        # /api/ stays absolute: it is a server route, not a file.
+        pre = prefix(code)
+        for asset in ('="/media/', '="/static/', '="/favicon.svg'):
+            page = page.replace(asset, '="' + pre + asset[3:])
 
         left = re.findall(r"\{\{(\w+)\}\}", page)
         if left:

@@ -23,7 +23,7 @@ def data_uri(rel):
     """/media/x.jpg -> data:image/jpeg;base64,..."""
     if rel in cache:
         return cache[rel]
-    p = ROOT / rel.lstrip("/")
+    p = ROOT / rel.lstrip("/").replace("../", "")
     if not p.exists():
         return None
     mime = mimetypes.guess_type(p.name)[0] or "application/octet-stream"
@@ -40,19 +40,22 @@ for lang, page in PAGES.items():
 
     # lightbox opens the 1800px original; the 900px version is ample for a
     # preview and roughly halves the finished file
-    h = re.sub(r'data-full="/media/([^"]+?)\.jpg"',
-               lambda m: 'data-full="/media/%s-thumb.jpg"' % m.group(1), h)
+    h = re.sub(r'data-full="((?:\.\./)?media/)([^"]+?)\.jpg"',
+               lambda m: 'data-full="%s%s-thumb.jpg"' % (m.group(1), m.group(2)), h)
 
     # preload/apple-touch just point at bytes we are about to inline
     h = re.sub(r'\s*<link rel="preload" as="image"[^>]*>', "", h)
     h = re.sub(r'\s*<link rel="apple-touch-icon"[^>]*>', "", h)
 
-    h = h.replace('<link rel="stylesheet" href="/static/css/style.css">',
-                  "<style>\n" + css + "\n</style>")
-    h = h.replace('<script src="/static/js/main.js" defer></script>',
-                  "<script>\n" + js + "\n</script>")
-    h = h.replace('<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
-                  '<link rel="icon" href="%s" type="image/svg+xml">' % favicon)
+    # Matched by regex rather than exact string: build.py emits a relative
+    # prefix that differs per language ("" at the root, "../" under el/ and bg/).
+    h, n1 = re.subn(r'<link rel="stylesheet" href="[^"]*style\.css">',
+                    lambda _: "<style>\n" + css + "\n</style>", h)
+    h, n2 = re.subn(r'<script src="[^"]*main\.js" defer></script>',
+                    lambda _: "<script>\n" + js + "\n</script>", h)
+    h, n3 = re.subn(r'<link rel="icon" href="[^"]*favicon\.svg"',
+                    lambda _: '<link rel="icon" href="%s"' % favicon, h)
+    assert n1 == n2 == n3 == 1, "inline failed: css=%s js=%s icon=%s" % (n1, n2, n3)
 
     # every remaining local asset
     missing = []
@@ -63,13 +66,16 @@ for lang, page in PAGES.items():
             missing.append(path)
             return m.group(0)
         return '%s="%s"' % (attr, u)
-    h = re.sub(r'(src|poster|data-full)="(/media/[^"]+)"', sub, h)
+    h = re.sub(r'(src|poster|data-full)="((?:\.\./)?media/[^"]+)"', sub, h)
 
     # the switcher points at /el/ and /bg/, which mean nothing beside a loose
     # file — repoint at the sibling previews so all three work in one folder
-    for href, fname in (('href="/"', "nayra-preview-en.html"),
-                        ('href="/el/"', "nayra-preview-el.html"),
-                        ('href="/bg/"', "nayra-preview-bg.html")):
+    for href, fname in (('href="./"', "nayra-preview-en.html"),
+                        ('href="../"', "nayra-preview-en.html"),
+                        ('href="el/"', "nayra-preview-el.html"),
+                        ('href="../el/"', "nayra-preview-el.html"),
+                        ('href="bg/"', "nayra-preview-bg.html"),
+                        ('href="../bg/"', "nayra-preview-bg.html")):
         h = h.replace(href + ' hreflang', 'href="%s" hreflang' % fname)
 
     title, body = NOTE[lang]
@@ -97,6 +103,6 @@ document.addEventListener("submit", function (e) {
 
     dest = OUT / ("nayra-preview-%s.html" % lang)
     dest.write_text(h, encoding="utf-8")
-    left = re.findall(r'(?:src|href|poster|data-full)="(/(?:media|static)/[^"]*)"', h)
+    left = re.findall(r'(?:src|href|poster|data-full)="((?:\.\./)?(?:media|static)/[^"]*)"', h)
     print("%-28s %6.2f MB   unresolved=%s  missing=%s"
           % (dest.name, dest.stat().st_size / 1024 / 1024, left or "none", missing or "none"))

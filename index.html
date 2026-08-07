@@ -27,14 +27,14 @@
 <meta name="twitter:image" content="https://example.com/media/og-cover.jpg">
 
 <meta name="theme-color" content="#1F292A">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/media/og-cover.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="media/og-cover.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="/media/hero.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="media/hero.jpg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400&family=Inter:wght@300..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="static/css/style.css">
 </head>
 
 <body>
@@ -56,9 +56,9 @@
     </nav>
 
     <div class="langs" role="group" aria-label="Language">
-      <a href="/" hreflang="en" lang="en" title="English" aria-current="true">EN</a>
-      <a href="/el/" hreflang="el" lang="el" title="Ελληνικά">ΕΛ</a>
-      <a href="/bg/" hreflang="bg" lang="bg" title="Български">БГ</a>
+      <a href="./" hreflang="en" lang="en" title="English" aria-current="true">EN</a>
+      <a href="el/" hreflang="el" lang="el" title="Ελληνικά">ΕΛ</a>
+      <a href="bg/" hreflang="bg" lang="bg" title="Български">БГ</a>
     </div>
 
     <a class="btn btn--sm btn--solid" href="#book">Check availability</a>
@@ -83,7 +83,7 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <img class="hero__img" src="/media/hero.jpg" width="2048" height="1365"
+  <img class="hero__img" src="media/hero.jpg" width="2048" height="1365"
        alt="The bay of Kavala seen from inside the bedroom, through an open balcony door, with the island of Thassos across the water."
        fetchpriority="high" decoding="async">
   <div class="hero__scrim"></div>
@@ -156,7 +156,7 @@
     </div>
 
     <figure class="grid2__fig">
-      <img src="/media/balcony-panorama.jpg" width="1366" height="2048" loading="lazy" decoding="async"
+      <img src="media/balcony-panorama.jpg" width="1366" height="2048" loading="lazy" decoding="async"
            alt="A table and two chairs on the balcony, behind a glass rail, looking over the rooftops of Kavala to the bay and Thassos beyond.">
     </figure>
   </div>
@@ -179,15 +179,15 @@
 
     <div class="spa__grid">
       <figure class="spa__fig spa__fig--tall">
-        <img src="/media/spa-jacuzzi-open-door.jpg" width="1066" height="1600" loading="lazy" decoding="async"
+        <img src="media/spa-jacuzzi-open-door.jpg" width="1066" height="1600" loading="lazy" decoding="async"
              alt="The jacuzzi bubbling beside an open balcony door, with the town and the bay filling the opening.">
       </figure>
       <figure class="spa__fig">
-        <img src="/media/spa-sauna-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
+        <img src="media/spa-sauna-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
              alt="The jacuzzi next to the timber sauna cabin, with two champagne flutes on a small wooden table between them.">
       </figure>
       <figure class="spa__fig">
-        <img src="/media/spa-jacuzzi-bay-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
+        <img src="media/spa-jacuzzi-bay-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
              alt="Close view across the bubbling jacuzzi to a full-height window over the rooftops and the sea.">
       </figure>
     </div>
@@ -204,8 +204,8 @@
       <figure class="film">
         <div class="film__box">
           <video class="film__v" width="640" height="1136" preload="none" muted loop playsinline webkit-playsinline
-                 poster="/media/spa-jacuzzi-to-sauna-poster.jpg">
-            <source src="/media/spa-jacuzzi-to-sauna.mp4" type="video/mp4">
+                 poster="media/spa-jacuzzi-to-sauna-poster.jpg">
+            <source src="media/spa-jacuzzi-to-sauna.mp4" type="video/mp4">
           </video>
           <button class="film__btn" type="button" aria-label="Play clip: the jacuzzi and the sauna beside it">
             <span class="film__tri" aria-hidden="true"></span>
@@ -217,8 +217,8 @@
       <figure class="film">
         <div class="film__box">
           <video class="film__v" width="640" height="1136" preload="none" muted loop playsinline webkit-playsinline
-                 poster="/media/spa-sauna-ladle-poster.jpg">
-            <source src="/media/spa-sauna-ladle.mp4" type="video/mp4">
+                 poster="media/spa-sauna-ladle-poster.jpg">
+            <source src="media/spa-sauna-ladle.mp4" type="video/mp4">
           </video>
           <button class="film__btn" type="button" aria-label="Play clip: water poured over the sauna stones">
             <span class="film__tri" aria-hidden="true"></span>
@@ -240,60 +240,60 @@
 
     <div class="gal" id="gal">
       <!-- data-full = large version loaded by the lightbox -->
-      <button class="gal__i gal__i--wide" type="button" data-full="/media/bedroom-sea-view.jpg">
-        <img src="/media/bedroom-sea-view-thumb.jpg" width="900" height="600" loading="lazy" decoding="async"
+      <button class="gal__i gal__i--wide" type="button" data-full="media/bedroom-sea-view.jpg">
+        <img src="media/bedroom-sea-view-thumb.jpg" width="900" height="600" loading="lazy" decoding="async"
              alt="A made bed with rolled towels, beside an open balcony door looking out to the sea and distant hills.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/balcony-panorama.jpg">
-        <img src="/media/balcony-panorama-thumb.jpg" width="900" height="1349" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/balcony-panorama.jpg">
+        <img src="media/balcony-panorama-thumb.jpg" width="900" height="1349" loading="lazy" decoding="async"
              alt="The balcony's table and chairs behind a glass rail, above the rooftops of Kavala and the bay.">
       </button>
-      <button class="gal__i gal__i--wide" type="button" data-full="/media/living-room-wide.jpg">
-        <img src="/media/living-room-wide-thumb.jpg" width="900" height="506" loading="lazy" decoding="async"
+      <button class="gal__i gal__i--wide" type="button" data-full="media/living-room-wide.jpg">
+        <img src="media/living-room-wide-thumb.jpg" width="900" height="506" loading="lazy" decoding="async"
              alt="The open-plan living room with a large corner sofa and oak coffee table, looking through to the green kitchen.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/living-room-balcony-door.jpg">
-        <img src="/media/living-room-balcony-door-thumb.jpg" width="900" height="1349" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/living-room-balcony-door.jpg">
+        <img src="media/living-room-balcony-door-thumb.jpg" width="900" height="1349" loading="lazy" decoding="async"
              alt="The living room sofa beside an open balcony door, with the sea and the town visible outside.">
       </button>
-      <button class="gal__i gal__i--wide" type="button" data-full="/media/living-room-kitchen.jpg">
-        <img src="/media/living-room-kitchen-thumb.jpg" width="900" height="600" loading="lazy" decoding="async"
+      <button class="gal__i gal__i--wide" type="button" data-full="media/living-room-kitchen.jpg">
+        <img src="media/living-room-kitchen-thumb.jpg" width="900" height="600" loading="lazy" decoding="async"
              alt="The living area seen from the balcony doors, with the dark green kitchen and marble island beyond.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/kitchen-island.jpg">
-        <img src="/media/kitchen-island-thumb.jpg" width="900" height="1350" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/kitchen-island.jpg">
+        <img src="media/kitchen-island-thumb.jpg" width="900" height="1350" loading="lazy" decoding="async"
              alt="The dark green kitchen with a white marble island, set with a bottle of wine, two glasses and flowers.">
       </button>
-      <button class="gal__i gal__i--wide" type="button" data-full="/media/kitchen-detail.jpg">
-        <img src="/media/kitchen-detail-thumb.jpg" width="900" height="600" loading="lazy" decoding="async"
+      <button class="gal__i gal__i--wide" type="button" data-full="media/kitchen-detail.jpg">
+        <img src="media/kitchen-detail-thumb.jpg" width="900" height="600" loading="lazy" decoding="async"
              alt="The kitchen's built-in oven and fridge, with a hallway leading through to the bedrooms.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/kitchen-sea-window.jpg">
-        <img src="/media/kitchen-sea-window-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/kitchen-sea-window.jpg">
+        <img src="media/kitchen-sea-window-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
              alt="A wide kitchen window above the sink, framing the bay and the mountains on the far shore.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/living-room-sofa.jpg">
-        <img src="/media/living-room-sofa-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/living-room-sofa.jpg">
+        <img src="media/living-room-sofa-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
              alt="The corner sofa and oak coffee table on polished marble floors, with sheer curtains drawn across the balcony doors.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/spa-room.jpg">
-        <img src="/media/spa-room-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/spa-room.jpg">
+        <img src="media/spa-room-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
              alt="The spa room, with the jacuzzi in the foreground, the timber sauna to one side and a wall-mounted television.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/spa-sauna.jpg">
-        <img src="/media/spa-sauna-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/spa-sauna.jpg">
+        <img src="media/spa-sauna-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
              alt="The jacuzzi beside the timber sauna cabin, with champagne set on a small wooden table.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/spa-jacuzzi-window.jpg">
-        <img src="/media/spa-jacuzzi-window-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/spa-jacuzzi-window.jpg">
+        <img src="media/spa-jacuzzi-window-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
              alt="The jacuzzi set against a full-height window, with a white bathrobe hanging beside it and the bay outside.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/spa-jacuzzi-open-door.jpg">
-        <img src="/media/spa-jacuzzi-open-door-thumb.jpg" width="900" height="1351" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/spa-jacuzzi-open-door.jpg">
+        <img src="media/spa-jacuzzi-open-door-thumb.jpg" width="900" height="1351" loading="lazy" decoding="async"
              alt="The jacuzzi bubbling beside an open balcony door, with the town and the bay filling the opening.">
       </button>
-      <button class="gal__i" type="button" data-full="/media/spa-jacuzzi-bay.jpg">
-        <img src="/media/spa-jacuzzi-bay-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
+      <button class="gal__i" type="button" data-full="media/spa-jacuzzi-bay.jpg">
+        <img src="media/spa-jacuzzi-bay-thumb.jpg" width="900" height="1200" loading="lazy" decoding="async"
              alt="Close view across the bubbling jacuzzi to a full-height window over the rooftops and the sea.">
       </button>
     </div>
@@ -687,6 +687,6 @@
 </script>
 
 <script>window.I18N={"syncBooked": "Live availability from Booking.com — booked dates are blocked.", "syncFree": "Live availability from Booking.com — nothing booked right now.", "errCheckout": "Check-out needs to be after check-in.", "errMinNights": "Minimum stay is {n} night(s).", "errBooked": "Already booked {from} – {to}. Please pick other dates.", "errPickDates": "Please choose your check-in and check-out dates.", "errSendEmail": "Something went wrong sending that. Please email {email} instead.", "errSend": "Something went wrong sending that. Please try again in a moment.", "sending": "Sending…", "nights": "{n} night(s)", "locale": "en-GB", "menuOpen": "Open menu", "menuClose": "Close menu", "calPickOut": "Now choose your check-out date."};</script>
-<script src="/static/js/main.js" defer></script>
+<script src="static/js/main.js" defer></script>
 </body>
 </html>
