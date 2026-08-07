@@ -500,12 +500,6 @@ p:last-child { margin-bottom: 0; }
   .score__bar { grid-column: 1 / -1; order: 3; }
 }
 
-.rev__empty {
-  grid-column: 1 / -1;
-  border: 1px dashed rgba(27,27,25,.28); border-radius: var(--r);
-  padding: 2.25rem 1.75rem; text-align: center; color: var(--ink-70); font-size: .9375rem;
-}
-.rev__empty code { font-size: .875em; background: rgba(27,27,25,.07); padding: .12em .4em; border-radius: 2px; }
 
 .rev__card {
   margin: 0; background: var(--paper); border-radius: var(--r);
