@@ -186,6 +186,17 @@ p:last-child { margin-bottom: 0; }
   background:
     linear-gradient(to top, rgba(20,22,23,.86) 0%, rgba(20,22,23,.46) 38%, rgba(20,22,23,.10) 68%, rgba(20,22,23,.30) 100%);
 }
+/* On a phone the hero is far taller than it is wide, so the headline lands on
+   the bright curtain in the middle of the photo rather than the dark bedding.
+   The desktop scrim is too light there — this is measurably stronger. */
+@media (max-width: 700px) {
+  .hero__scrim {
+    background:
+      linear-gradient(to top, rgba(20,22,23,.92) 0%, rgba(20,22,23,.78) 30%,
+                      rgba(20,22,23,.55) 55%, rgba(20,22,23,.34) 78%, rgba(20,22,23,.42) 100%);
+  }
+  .hero__img { object-position: 45% 50%; }
+}
 .hero__body { width: 100%; max-width: var(--wrap); margin-inline: auto; padding: 0 var(--pad) clamp(3.5rem, 11vh, 6.5rem); color: var(--ground); }
 .hero__body .eyebrow { color: rgba(212,211,206,.72); }
 
@@ -299,20 +310,29 @@ p:last-child { margin-bottom: 0; }
    elements reliably inside a multicol container, which left all but one tile
    unrendered. Fixed tile ratios also read as more deliberate than ragged
    masonry given the mixed portrait/landscape sources. */
-.gal { display: grid; grid-template-columns: repeat(2, 1fr); gap: .7rem; }
+/* Phones: two uniform square tiles per row.
+
+   A full-width tile cannot sit beside a half-width one, so alternating wide
+   and narrow tiles in a 2-column grid left a hole after every narrow one.
+   Squares also crop a landscape photo far less brutally than the 4:5 portrait
+   this used to be. Wide tiles only appear from 3 columns up, where the
+   sequence divides exactly and nothing is left over. */
+.gal {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem;
+  grid-auto-flow: row dense;
+}
 .gal__i {
   margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in;
-  aspect-ratio: 4 / 5; border-radius: var(--r); overflow: hidden;
+  aspect-ratio: 1; border-radius: var(--r); overflow: hidden;
 }
 .gal__i img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease), opacity .4s; }
 .gal__i:hover img { transform: scale(1.04); opacity: .93; }
 
-/* Landscape originals get a wide tile so they aren't cropped to a portrait. */
-.gal__i--wide { grid-column: span 2; aspect-ratio: 16 / 10; }
-
 @media (min-width: 700px) {
   .gal { grid-template-columns: repeat(3, 1fr); gap: .85rem; }
-  .gal__i--wide { aspect-ratio: 16 / 9; }
+  .gal__i { aspect-ratio: 4 / 5; }
+  /* Landscape originals get a wide tile so they aren't cropped to a portrait. */
+  .gal__i--wide { grid-column: span 2; aspect-ratio: 16 / 9; }
 }
 
 /* ---------- Around ----------

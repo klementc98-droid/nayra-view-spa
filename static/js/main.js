@@ -274,10 +274,24 @@ const CONFIG = {
       const v   = $(".film__v", fig);
       const btn = $(".film__btn", fig);
 
+      /* iOS is strict here:
+           - muted must be set as a PROPERTY, not just the attribute, or
+             play() is treated as an audible autoplay attempt and rejected;
+           - with preload="none" the element has fetched nothing, so play()
+             can reject outright unless load() is called first;
+           - playsinline must be on or iOS hijacks it into fullscreen.
+         Together these are why the clips would not start on a phone. */
       const play = () => {
-        v.preload = "auto";
+        v.muted = true;
+        v.playsInline = true;
+        if (v.preload !== "auto") { v.preload = "auto"; v.load(); }
         const p = v.play();
-        if (p) p.then(() => { btn.hidden = true; }).catch(() => { btn.hidden = false; });
+        if (p && p.then) {
+          p.then(() => { btn.hidden = true; })
+           .catch(() => { btn.hidden = false; });   // leave the tap target visible
+        } else {
+          btn.hidden = true;                        // very old browsers return nothing
+        }
       };
 
       btn.addEventListener("click", () => {
@@ -285,8 +299,13 @@ const CONFIG = {
         else { v.pause(); btn.hidden = false; }
       });
 
-      /* Let a playing clip be paused by clicking it. */
+      /* Let a playing clip be paused by tapping it. */
       v.addEventListener("click", () => { v.pause(); btn.hidden = false; });
+      /* iOS pauses video on its own — backgrounding the tab, low-power mode,
+         an incoming call. Without this the play button stays hidden and the
+         clip looks frozen with no way to restart it. */
+      v.addEventListener("pause", () => { btn.hidden = false; });
+      v.addEventListener("playing", () => { btn.hidden = true; });
 
       if (!ambient || !("IntersectionObserver" in window)) return;
 
