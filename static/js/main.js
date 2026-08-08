@@ -349,8 +349,12 @@ const CONFIG = {
       opener = btn;
       pmapTitle.textContent = btn.textContent.trim();
       /* "<place> Kavala" — built from the name so adding a place is one line
-         of markup with no coordinates to look up. */
-      const query = /kavala/i.test(q) ? q : q + " Kavala";
+         of markup with no coordinates to look up.
+         The check must know both spellings: the queries use the Greek names
+         (a bare Latin "Rapsani" loses to the Larissa wine village on Google),
+         and a Latin-only test appended the city a second time — "Παραλία
+         Ραψάνη, Καβάλα Kavala". */
+      const query = /kavala|καβάλα/i.test(q) ? q : q + " Kavala";
       if (consented()) embed(query); else askFirst(query);
       pmap.hidden = false;
       document.body.style.overflow = "hidden";
