@@ -463,6 +463,17 @@ p:last-child { margin-bottom: 0; }
    A definite height with no growing is what this actually wants. */
 @media (min-width: 701px) { .pmap__body { flex: none; height: min(62vh, 560px); } }
 
+/* Link out for anyone who wants walking or transit — the embed is driving-only */
+.pmap__out {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  padding: .6rem 1rem; text-align: center;
+  background: rgba(31,41,42,.9); color: var(--ground);
+  font-size: .75rem; text-decoration: none;
+  backdrop-filter: blur(6px);
+  transition: background .25s var(--ease);
+}
+.pmap__out:hover { background: rgba(31,41,42,.98); }
+
 /* First-run consent, mirroring the "Where it is" facade */
 .pmap__consent {
   position: absolute; inset: 0;

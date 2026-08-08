@@ -249,7 +249,7 @@ const CONFIG = {
   if (mapFrame && mapLoad && mapQ) {
     mapLoad.addEventListener("click", () => {
       const f = document.createElement("iframe");
-      f.src = `https://www.google.com/maps?q=${mapQ}&output=embed`;
+      f.src = `https://www.google.com/maps?q=${mapQ}&z=16&output=embed`;
       f.loading = "lazy";
       f.referrerPolicy = "no-referrer-when-downgrade";
       f.title = CONFIG.mapQuery;
@@ -282,14 +282,39 @@ const CONFIG = {
       try { sessionStorage.setItem(CONSENT, "1"); } catch { /* private mode */ }
     };
 
+    /* Route from the apartment to the place, not just a pin on the place.
+       saddr/daddr with output=embed is an undocumented pattern — it works and
+       needs no API key, but Google could change it. The officially supported
+       directions embed requires a paid key. dirflg=d is driving: Kavala is
+       steep and the apartment sits well above the town, so walking times back
+       uphill would read far worse than the reality of how guests travel. */
     const embed = (q) => {
+      const from = CONFIG.mapQuery || "";
+      const url = from
+        ? `https://www.google.com/maps?saddr=${encodeURIComponent(from)}` +
+          `&daddr=${encodeURIComponent(q)}&dirflg=d&z=15&output=embed`
+        : `https://www.google.com/maps?q=${encodeURIComponent(q)}&z=16&output=embed`;
+
       const f = document.createElement("iframe");
-      f.src = `https://www.google.com/maps?q=${encodeURIComponent(q)}&output=embed`;
+      f.src = url;
       f.loading = "lazy";
       f.referrerPolicy = "no-referrer-when-downgrade";
       f.title = q;
       f.allowFullscreen = true;
-      pmapBody.replaceChildren(f);
+
+      /* Escape hatch: the embed is fixed to driving, so anyone wanting to walk
+         or take a bus needs the real Maps app. */
+      const out = document.createElement("a");
+      out.className = "pmap__out";
+      out.target = "_blank";
+      out.rel = "noopener noreferrer";
+      out.textContent = t("mapOpen", {}, "Open directions in Google Maps");
+      out.href = from
+        ? "https://www.google.com/maps/dir/?api=1" +
+          `&origin=${encodeURIComponent(from)}&destination=${encodeURIComponent(q)}`
+        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+
+      pmapBody.replaceChildren(f, out);
     };
 
     const askFirst = (q) => {
