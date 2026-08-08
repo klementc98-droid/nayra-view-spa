@@ -874,3 +874,82 @@ p:last-child { margin-bottom: 0; }
   .reveal { opacity: 1; transform: none; }
   .gal__i:hover img { transform: none; }
 }
+
+/* ==========================================================================
+   Finish
+   ========================================================================== */
+
+/* --- Section numerals -------------------------------------------------------
+   Editorial numbering, via a CSS counter so no markup or locale strings are
+   needed and the sequence can never drift out of order. */
+main { counter-reset: sect; }
+.sect, .spa, .book { counter-increment: sect; }
+/* Not a child selector: in the apartment section the eyebrow sits inside the
+   text column rather than directly under .wrap, so a > chain skipped it. The
+   hero is excluded because it is not one of these three section types. */
+.sect .eyebrow::before,
+.spa .eyebrow::before,
+.book .eyebrow::before {
+  content: counter(sect, decimal-leading-zero);
+  margin-right: .85rem; padding-right: .85rem;
+  border-right: 1px solid currentColor;
+  opacity: .55;
+}
+
+/* --- Grain ------------------------------------------------------------------
+   A single tile of SVG noise at very low opacity. Large flat fields of one
+   colour look plasticky on a good screen; this gives them a little tooth.
+   Pointer-events off so it never intercepts a click. */
+.spa, .book, .foot, .hero { position: relative; }
+.spa::after, .book::after, .foot::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  opacity: .05; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.spa > *, .book > *, .foot > * { position: relative; z-index: 1; }
+
+/* --- Hero drift -------------------------------------------------------------
+   A very slow push-in. Long enough that it reads as stillness with life in it
+   rather than as an animation. */
+@keyframes heroDrift {
+  from { transform: scale(1.0); }
+  to   { transform: scale(1.07); }
+}
+.hero__img { animation: heroDrift 26s var(--ease) forwards; will-change: transform; }
+
+/* --- Staggered gallery reveal ----------------------------------------------
+   Tiles arrive in sequence rather than all at once. Capped at 8 so a long
+   grid never feels like it is loading slowly. */
+.gal__i { opacity: 0; transform: translateY(14px); }
+.gal.is-in .gal__i {
+  opacity: 1; transform: none;
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+.gal.is-in .gal__i:nth-child(1) { transition-delay: .00s }
+.gal.is-in .gal__i:nth-child(2) { transition-delay: .06s }
+.gal.is-in .gal__i:nth-child(3) { transition-delay: .12s }
+.gal.is-in .gal__i:nth-child(4) { transition-delay: .18s }
+.gal.is-in .gal__i:nth-child(5) { transition-delay: .24s }
+.gal.is-in .gal__i:nth-child(6) { transition-delay: .30s }
+.gal.is-in .gal__i:nth-child(7) { transition-delay: .36s }
+.gal.is-in .gal__i:nth-child(n+8) { transition-delay: .42s }
+
+/* --- Gallery caption on hover ---------------------------------------------- */
+.gal__i::after {
+  content: attr(data-cap);
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 2.2rem .8rem .7rem;
+  font-size: .6875rem; line-height: 1.4; color: var(--ground); text-align: left;
+  background: linear-gradient(to top, rgba(16,18,19,.82), rgba(16,18,19,0));
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .35s var(--ease), transform .35s var(--ease);
+}
+.gal__i { position: relative; }
+.gal__i:hover::after, .gal__i:focus-visible::after { opacity: 1; transform: none; }
+@media (hover: none) { .gal__i::after { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__img { animation: none; }
+  .gal__i { opacity: 1; transform: none; }
+  .gal__i::after { display: none; }
+}

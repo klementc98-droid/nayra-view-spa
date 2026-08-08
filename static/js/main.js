@@ -161,6 +161,21 @@ const CONFIG = {
   }
 
   /* ---------- Reveal on scroll ---------- */
+  /* The gallery reveals as one unit so its tiles can stagger against each
+     other; revealing each tile independently made the sequence depend on
+     scroll speed and look ragged. */
+  const gal = $("#gal");
+  if (gal && !reduced && "IntersectionObserver" in window) {
+    const gio = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("is-in");
+      gio.unobserve(e.target);
+    }), { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+    gio.observe(gal);
+  } else if (gal) {
+    gal.classList.add("is-in");
+  }
+
   const revealables = $$(".sect .wrap > *, .spa__head, .spa__grid, .book__grid");
   if (!reduced && "IntersectionObserver" in window) {
     revealables.forEach((el) => el.classList.add("reveal"));
