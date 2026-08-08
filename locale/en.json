@@ -146,5 +146,7 @@
   "cal_clear": "Clear",
   "cal_open": "Open the calendar",
   "js_calPickOut": "Now choose your check-out date.",
-  "rev_readall": "Read guest reviews on Booking.com"
+  "rev_readall": "Read guest reviews on Booking.com",
+  "js_mapShow": "Show map",
+  "js_mapPrivacy": "Loading the map connects you to Google and may set cookies."
 }

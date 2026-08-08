@@ -60,7 +60,11 @@ body {
 
 img { max-width: 100%; height: auto; display: block; }
 
-h1, h2, h3, h4 { margin: 0; font-weight: 400; line-height: 1.08; letter-spacing: -.015em; }
+h1, h2, h3, h4 {
+  margin: 0; font-weight: 400; line-height: 1.08; letter-spacing: -.015em;
+  text-wrap: balance;          /* evens the line lengths, kills orphans */
+}
+p, li, figcaption { text-wrap: pretty; }
 p { margin: 0 0 1.1em; }
 p:last-child { margin-bottom: 0; }
 
@@ -113,8 +117,7 @@ p:last-child { margin-bottom: 0; }
 .btn--solid { background: var(--ink); color: var(--ground); }
 .btn--solid:hover { background: var(--teal); }
 .btn--ghost { background: transparent; color: currentColor; border-color: currentColor; }
-.btn--ghost:hover { background: currentColor; }
-.btn--ghost:hover > * { mix-blend-mode: difference; }
+.btn--ghost:hover { background: rgba(127,127,127,.14); border-color: currentColor; }
 .btn--sm { padding: .7rem 1.15rem; font-size: .75rem; }
 .btn--full { width: 100%; }
 
@@ -225,11 +228,15 @@ p:last-child { margin-bottom: 0; }
 .sect { padding: clamp(4rem, 11vw, 8rem) 0; }
 .sect--tint { background: var(--ground); }
 
-.grid2 { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); align-items: center; }
+.grid2 { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); align-items: start; }
+.grid2__fig { margin: 0; }
 .grid2__fig img { border-radius: var(--r); width: 100%; }
 @media (min-width: 900px) {
   .grid2 { grid-template-columns: 1fr .82fr; }
-  .grid2__fig { order: 2; }
+  .grid2__fig { order: 2; position: sticky; top: 5.5rem; }
+  /* Fill the column rather than floating at its natural height — the text
+     beside it is much taller, which left a large dead area. */
+  .grid2__fig img { height: min(72vh, 620px); object-fit: cover; }
 }
 
 /* Icons carry no meaning on their own — every item is also written out — so
@@ -246,7 +253,7 @@ p:last-child { margin-bottom: 0; }
 }
 .amen li:hover { background: rgba(63,78,77,.08); color: var(--ink); }
 .amen svg {
-  width: 19px; height: 19px; flex: none; color: var(--teal); opacity: .8;
+  width: 21px; height: 21px; flex: none; color: var(--teal); opacity: .85;
   transition: opacity .25s var(--ease);
 }
 .amen li:hover svg { opacity: 1; }
@@ -261,9 +268,17 @@ p:last-child { margin-bottom: 0; }
 .spa__fig { margin: 0; }
 .spa__fig img { width: 100%; border-radius: var(--r); }
 @media (min-width: 700px) {
-  .spa__grid { grid-template-columns: 1.25fr 1fr; grid-template-rows: auto auto; }
+  /* A real height, not max-height: capping the box left the images at their
+     natural size so they overflowed and collided with the row below.
+     Fixed rows + object-fit lets the photos crop to fit instead. */
+  .spa__grid {
+    grid-template-columns: 1.25fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: min(74vh, 700px);
+  }
   .spa__fig--tall { grid-row: span 2; }
-  .spa__fig--tall img { height: 100%; object-fit: cover; }
+  .spa__fig { min-height: 0; }
+  .spa__fig img { height: 100%; object-fit: cover; }
 }
 
 /* ---------- Spa clips ----------
@@ -272,11 +287,11 @@ p:last-child { margin-bottom: 0; }
    ratio below matches the real frame exactly, so nothing is cropped, and the
    320px cap stops them being upscaled beyond their native width. */
 .films {
-  display: grid; gap: 1.25rem; margin-top: 2rem;
+  display: grid; gap: 1rem; margin-top: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(0, 320px));
-  justify-content: center;
+  justify-content: start;
 }
-@media (min-width: 760px) { .films { gap: .9rem; } }
+@media (min-width: 760px) { .films { gap: .9rem; margin-top: .9rem; } }
 
 .film { margin: 0; width: 100%; }
 .film__box { position: relative; aspect-ratio: 320 / 568; border-radius: var(--r); overflow: hidden; background: #12181A; }
@@ -391,6 +406,73 @@ p:last-child { margin-bottom: 0; }
 }
 .around__list li:last-child { border-bottom: 0; padding-bottom: 0; }
 .around__d { color: var(--ink-45); font-size: .8125rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* Clickable place names. Styled as text, not as a button — they sit in a list
+   and shouting would wreck the rhythm — but they are real <button>s, so they
+   are keyboard reachable and announced correctly. */
+.place {
+  padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; color: inherit; text-align: left;
+  border-bottom: 1px solid rgba(27,27,25,.25);
+  transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.place:hover { color: var(--ink); border-bottom-color: var(--ink); }
+.around__transit .place { border-bottom-color: rgba(27,27,25,.3); }
+
+/* ---------- Place map modal ---------- */
+.pmap {
+  position: fixed; inset: 0; z-index: 300;
+  display: grid; place-items: center;
+  background: rgba(16,18,19,.72);
+  padding: clamp(0px, 4vw, 2.5rem);
+  animation: fade .22s var(--ease);
+}
+.pmap__box {
+  width: min(940px, 100%); max-height: 100%;
+  display: flex; flex-direction: column;
+  background: var(--paper); border-radius: var(--r); overflow: hidden;
+  box-shadow: 0 30px 70px -30px rgba(16,18,19,.7);
+}
+/* Phones get near-full-screen — an embedded map is unusable in a small box. */
+@media (max-width: 700px) {
+  .pmap { padding: 0; }
+  .pmap__box { width: 100%; height: 100%; max-height: none; border-radius: 0; }
+}
+
+.pmap__head {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.05rem 1.1rem 1.05rem 1.4rem;
+  border-bottom: 1px solid rgba(27,27,25,.12);
+}
+.pmap__title {
+  font-family: var(--serif); font-size: 1.25rem; margin: 0;
+  flex: 1; min-width: 0;
+}
+.pmap__x {
+  flex: none; width: 40px; height: 40px; display: grid; place-items: center;
+  background: none; border: 1px solid rgba(27,27,25,.18); border-radius: 50%;
+  color: var(--ink-70); font-size: 1.5rem; line-height: 1; cursor: pointer;
+  transition: background .25s, border-color .25s, color .25s;
+}
+.pmap__x:hover { background: rgba(27,27,25,.06); border-color: rgba(27,27,25,.35); color: var(--ink); }
+
+.pmap__body { flex: 1 1 auto; min-height: 0; position: relative; background: var(--petrol); }
+.pmap__body iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+/* flex:1 sets flex-basis to 0, and the box has no fixed height of its own, so
+   the body collapsed to nothing and the consent button spilled outside it.
+   A definite height with no growing is what this actually wants. */
+@media (min-width: 701px) { .pmap__body { flex: none; height: min(62vh, 560px); } }
+
+/* First-run consent, mirroring the "Where it is" facade */
+.pmap__consent {
+  position: absolute; inset: 0;
+  display: grid; place-items: center; align-content: center; gap: 1rem;
+  padding: 2rem; text-align: center;
+}
+.pmap__consent p {
+  margin: 0; max-width: 34ch;
+  font-size: .8125rem; line-height: 1.55; color: rgba(212,211,206,.6);
+}
 
 /* Getting here — lifted out of the coffee column, where an airport made no sense */
 .around__transit {

@@ -260,6 +260,100 @@ const CONFIG = {
     mapFrame.hidden = true;
   }
 
+  /* ---------- Place map modal ----------
+     Every place name in the Around section opens a Google map in a dialog
+     rather than navigating away, so the visitor never loses their place on the
+     page. Consent mirrors the "Where it is" facade: nothing is requested from
+     Google until the visitor asks, and once they have agreed the rest of the
+     session opens straight into the map. */
+  const pmap      = $("#pmap");
+  const pmapTitle = $("#pmapTitle");
+  const pmapBody  = $("#pmapBody");
+  const pmapX     = $("#pmapX");
+
+  if (pmap && pmapBody) {
+    const CONSENT = "nayra:mapConsent";
+    let opener = null;
+
+    const consented = () => {
+      try { return sessionStorage.getItem(CONSENT) === "1"; } catch { return false; }
+    };
+    const remember = () => {
+      try { sessionStorage.setItem(CONSENT, "1"); } catch { /* private mode */ }
+    };
+
+    const embed = (q) => {
+      const f = document.createElement("iframe");
+      f.src = `https://www.google.com/maps?q=${encodeURIComponent(q)}&output=embed`;
+      f.loading = "lazy";
+      f.referrerPolicy = "no-referrer-when-downgrade";
+      f.title = q;
+      f.allowFullscreen = true;
+      pmapBody.replaceChildren(f);
+    };
+
+    const askFirst = (q) => {
+      const wrap = document.createElement("div");
+      wrap.className = "pmap__consent";
+      const btn = document.createElement("button");
+      btn.className = "mapcard__load";
+      btn.type = "button";
+      btn.textContent = t("mapShow", {}, "Show map");
+      const note = document.createElement("p");
+      note.textContent = t("mapPrivacy", {},
+        "Loading the map connects you to Google and may set cookies.");
+      btn.addEventListener("click", () => { remember(); embed(q); });
+      wrap.append(btn, note);
+      pmapBody.replaceChildren(wrap);
+    };
+
+    const focusables = () =>
+      $$('button, [href], iframe, input, select, textarea, [tabindex]:not([tabindex="-1"])', pmap)
+        .filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+
+    const closePmap = () => {
+      pmap.hidden = true;
+      pmapBody.replaceChildren();          // stop the iframe loading/streaming
+      document.body.style.overflow = "";
+      if (opener) { opener.focus(); opener = null; }
+    };
+
+    const openPmap = (btn) => {
+      const q = btn.dataset.q;
+      if (!q) return;
+      opener = btn;
+      pmapTitle.textContent = btn.textContent.trim();
+      /* "<place> Kavala" — built from the name so adding a place is one line
+         of markup with no coordinates to look up. */
+      const query = /kavala/i.test(q) ? q : q + " Kavala";
+      if (consented()) embed(query); else askFirst(query);
+      pmap.hidden = false;
+      document.body.style.overflow = "hidden";
+      pmapX.focus();
+    };
+
+    $$(".place").forEach((b) => b.addEventListener("click", () => openPmap(b)));
+    pmapX.addEventListener("click", closePmap);
+    /* Test the target IS the backdrop, rather than testing that it is not
+       inside the box. Consenting replaces the modal's children mid-click, so
+       by the time the event bubbles here the button that was clicked is
+       already detached — and contains() on a detached node is false, which
+       closed the modal the instant it was filled. */
+    pmap.addEventListener("click", (e) => { if (e.target === pmap) closePmap(); });
+
+    addEventListener("keydown", (e) => {
+      if (pmap.hidden) return;
+      if (e.key === "Escape") { closePmap(); return; }
+      if (e.key !== "Tab") return;
+      /* Trap: keep Tab inside the dialog while it is open. */
+      const f = focusables();
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
+
   /* ---------- Spa clips ----------
      Placed above the booking block on purpose: that block returns early when a
      channel-manager embed is configured, which would skip everything after it. */
